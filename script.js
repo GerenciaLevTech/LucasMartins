@@ -385,16 +385,4 @@ document.addEventListener("DOMContentLoaded", () => {
 			);
 		}
 	});
-
-	// ========================================
-	// CONSOLE MESSAGE (Easter Egg)
-	// ========================================
-	console.log(
-		"%c🎨 Landing Page - Kayre Felix ",
-		"background: #b366ff; color: white; font-size: 20px; padding: 10px; border-radius: 5px;"
-	);
-	console.log(
-		"%cDesenvolvido com 💜 e código!",
-		"color: #b366ff; font-size: 14px;"
-	);
 }); // Fim do DOMContentLoaded

@@ -825,7 +825,7 @@ a {
 	text-align: center;
 	padding-top: 2rem;
 	border-top: 1px solid rgba(255, 255, 255, 0.1);
-	color: var(--text-gray);
+	color: #ffffff;
 	font-size: 0.9rem;
 }
 
@@ -1413,7 +1413,8 @@ a {
 		opacity: 1;
 		z-index: 5;
 		animation: fadeInRight 1s ease forwards 0.4s;
-		margin-top: -3.2rem; /* <<<--- ADICIONADO: Empurra o título para baixo */
+		margin-top: -3.2rem;
+		margin-right: 2rem;
 		br {
 			display: none;
 		}
