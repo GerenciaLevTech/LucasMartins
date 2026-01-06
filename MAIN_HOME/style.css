@@ -1,0 +1,1950 @@
+/* ==================== VARIÁVEIS E RESET ==================== */
+:root {
+	--bg-white: #ffffff;
+	--bg-body-dark: #1a1a1a;
+	--primary-purple: #ffdca0; /* Mantido do seu site */
+	--text-dark: #1f1f1f;
+	--text-light: #ffffff;
+	--text-gray: #828282;
+	--font-main: "Poppins", sans-serif;
+
+	/* Variáveis do Calendário (mantendo nomes para consistência) */
+	--dark-bg: #121212; /* Cor de fundo geral do calendário/modal */
+	--content-bg: #1a1a1a; /* Cor de fundo do conteúdo do modal */
+	--accent-purple: #ffdca0; /* Roxo um pouco diferente, usado no calendário */
+	--accent-purple-hover: #ffdca0; /* Hover do roxo do calendário */
+	--text-medium: #aaa; /* Cinza médio do calendário */
+	--text-dark-calendar: #555; /* Cinza escuro do calendário (renomeado para evitar conflito) */
+	--border-color: #333; /* Cor da borda do calendário */
+}
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+html {
+	scroll-behavior: smooth;
+}
+
+body {
+	font-family: var(--font-main);
+	background-color: var(--bg-body-dark);
+	color: var(--text-light);
+	overflow-x: hidden;
+}
+
+a {
+	text-decoration: none;
+	color: inherit;
+}
+
+/* ==================== HEADER ==================== */
+.header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: -1rem;
+	position: fixed;
+	width: 100%;
+	top: 0;
+	left: 0;
+	z-index: 1000;
+	transition: all 0.3s ease;
+}
+
+.header.scrolled {
+	background-color: rgba(26, 26, 26, 0.95);
+	backdrop-filter: blur(10px);
+	box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+}
+
+.logo img {
+	height: 95px;
+	margin-top: 5px;
+	width: auto;
+	transition: transform 0.3s ease;
+}
+
+.logo:hover img {
+	transform: scale(1.05);
+}
+
+.hamburger-menu {
+	cursor: pointer;
+	font-size: 1.8rem;
+	color: var(--text-dark); /* Cor inicial no fundo branco */
+	transition: color 0.3s ease;
+	margin-right: 55px;
+	z-index: 1001;
+}
+
+/* Cor do hamburger quando header tem fundo */
+.header.scrolled .hamburger-menu,
+.mobile-menu.active ~ .header .hamburger-menu {
+	color: var(--text-light); /* Muda para branco quando scroll ou menu aberto */
+}
+
+/* ==================== MENU MOBILE ==================== */
+.mobile-menu {
+	position: fixed;
+	top: 0;
+	right: -100%;
+	width: 300px;
+	height: 100vh;
+	background: linear-gradient(135deg, #352e23 0%, #9b8663 100%);
+	z-index: 999;
+	transition: right 0.4s ease;
+	padding: 5rem 2rem 2rem;
+	box-shadow: -5px 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.mobile-menu.active {
+	right: 0;
+}
+
+.mobile-menu nav ul {
+	list-style: none;
+}
+
+.mobile-menu nav li {
+	margin-bottom: 2rem;
+	opacity: 0;
+	transform: translateX(50px);
+	transition: all 0.3s ease;
+}
+
+.mobile-menu.active nav li {
+	opacity: 1;
+	transform: translateX(0);
+}
+
+.mobile-menu.active nav li:nth-child(1) {
+	transition-delay: 0.1s;
+}
+.mobile-menu.active nav li:nth-child(2) {
+	transition-delay: 0.2s;
+}
+.mobile-menu.active nav li:nth-child(3) {
+	transition-delay: 0.3s;
+}
+.mobile-menu.active nav li:nth-child(4) {
+	transition-delay: 0.4s;
+}
+.mobile-menu.active nav li:nth-child(5) {
+	transition-delay: 0.5s;
+}
+
+.mobile-menu nav a {
+	font-size: 1.5rem;
+	font-weight: 600;
+	color: var(--text-light);
+	display: block;
+	transition: all 0.3s ease;
+}
+
+.mobile-menu nav a:hover {
+	color: var(--primary-purple);
+	transform: translateX(10px);
+}
+
+.menu-overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100vh;
+	background-color: rgba(0, 0, 0, 0.7);
+	z-index: 998;
+	opacity: 0;
+	pointer-events: none;
+	transition: opacity 0.3s ease;
+}
+
+.menu-overlay.active {
+	opacity: 1;
+	pointer-events: all;
+}
+
+/* ==================== HERO SECTION ==================== */
+.hero {
+	min-height: 100vh;
+	display: flex;
+	align-items: center; /* Centraliza o container verticalmente */
+	justify-content: center;
+	background-color: var(--bg-white);
+	position: relative;
+	overflow: hidden;
+	padding-top: 8rem; /* Espaço para o header fixo */
+	padding-bottom: 0; /* Remove padding inferior */
+}
+
+/* Container principal dentro do hero - ocupará a altura disponível */
+.hero-container {
+	position: relative;
+	width: 100%;
+	max-width: 1200px; /* Limita a largura máxima */
+	/* A altura será definida pelo conteúdo + posicionamento absoluto */
+	height: calc(
+		100vh - 8rem
+	); /* Altura disponível descontando o padding do topo do hero */
+}
+
+.intro-text-wrapper {
+	position: absolute;
+	top: 15%; /* Subiu (experimente 15%, 18%...) */
+	left: 4%;
+	max-width: 250px;
+	z-index: 10;
+	opacity: 0;
+	animation: fadeInUp 1s ease forwards 0.3s;
+}
+
+/* (Regras .intro-text e .intro-text a continuam iguais) */
+.intro-text {
+	line-height: 1.7;
+	font-size: 1rem;
+	color: var(--text-dark);
+}
+.intro-text a {
+	color: var(--text-dark);
+	font-weight: 700;
+	display: inline-block;
+	margin-top: 0.5rem;
+	position: relative;
+	transition: color 0.3s ease;
+}
+
+.intro-text a::after {
+	content: "";
+	position: absolute;
+	bottom: -2px;
+	left: 0;
+	width: 0;
+	height: 2px;
+	background-color: var(--primary-purple);
+	transition: width 0.3s ease;
+}
+.intro-text a:hover {
+	color: var(--primary-purple);
+}
+.intro-text a:hover::after {
+	width: 100%;
+}
+
+/* IMAGEM DO KAYRE - Alinhada na base */
+.hero-image-wrapper {
+	position: absolute;
+	bottom: -1px; /* Faz a base da div tocar a borda inferior do hero-container */
+	left: 50%; /* Centro horizontal */
+	transform: translateX(-50%); /* Centraliza */
+	width: clamp(400px, 35vw, 550px);
+	z-index: 3;
+	opacity: 0;
+	animation: fadeInUpImage 1s ease forwards 0.5s;
+	line-height: 0; /* Remove espaço extra */
+}
+
+.hero-image-wrapper img {
+	display: block;
+	width: 100%;
+	height: auto;
+	filter: drop-shadow(0px 15px 30px rgba(0, 0, 0, 0.2));
+}
+
+/* CÍRCULO ROXO - Posicionado relativo à imagem */
+.hero-circle {
+	position: absolute;
+	width: clamp(450px, 40vw, 650px);
+	height: clamp(450px, 40vw, 650px);
+	background-color: var(--primary-purple);
+	border-radius: 50%;
+	z-index: 2; /* Atrás da imagem */
+	/* Alinha a base do círculo um pouco ACIMA da base da imagem */
+	bottom: 3rem;
+	/* Posiciona a borda esquerda do círculo um pouco ANTES do centro da página */
+	left: 51%;
+	/* Centraliza horizontalmente e sobe */
+	transform: translate(-50%, 0) scale(0);
+	opacity: 0;
+	animation: scaleInRevised 1s ease forwards 0.2s;
+}
+
+/* TÍTULO - Posição ajustada */
+.hero-title {
+	position: absolute;
+	right: -15%;
+	top: 35%; /* Subiu (experimente 40%, 45%...) */
+	transform: translateY(-50%);
+	font-size: clamp(5rem, 12vw, 9rem);
+	font-weight: 900;
+	line-height: 1;
+	z-index: 10;
+	color: var(--text-dark);
+	opacity: 0;
+	animation: fadeInRight 1s ease forwards 0.4s;
+}
+.hero-title span {
+	/* Mantém o estilo do span Felix */
+	margin-left: 0; /* Ajuste se necessário */
+}
+
+.social-icons {
+	position: absolute;
+	bottom: 10vh;
+	left: 5%;
+	display: flex;
+	gap: 1.5rem;
+	z-index: 10;
+	opacity: 0;
+	animation: fadeInUp 1s ease forwards 0.6s;
+}
+
+.social-icons a {
+	background-color: var(--text-dark);
+	color: var(--bg-white);
+	width: 65px;
+	height: 65px;
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 1.1rem;
+	transition: all 0.3s ease;
+}
+.social-icons a:hover {
+	background-color: var(--primary-purple);
+	transform: scale(1.1) rotate(360deg);
+}
+
+/* ==================== ANIMAÇÕES ==================== */
+@keyframes fadeInUp {
+	from {
+		opacity: 0;
+		transform: translateY(30px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+@keyframes fadeInRight {
+	from {
+		opacity: 0;
+		transform: translateY(-50%) translateX(30px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(-50%) translateX(0);
+	}
+}
+@keyframes scaleInRevised {
+	from {
+		opacity: 0;
+		transform: translate(-50%, 0) scale(0);
+	}
+	to {
+		opacity: 1;
+		transform: translate(-50%, 0) scale(1);
+	}
+}
+@keyframes fadeInUpImage {
+	from {
+		opacity: 0;
+		transform: translate(-50%, 30px);
+	}
+	to {
+		opacity: 1;
+		transform: translate(-50%, 0);
+	}
+}
+@keyframes float {
+	0%,
+	100% {
+		transform: translateY(0);
+	}
+	50% {
+		transform: translateY(-20px);
+	}
+}
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
+.fade-in-section {
+	opacity: 0;
+	transform: translateY(50px);
+	transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.fade-in-section.visible {
+	opacity: 1;
+	transform: translateY(0);
+}
+
+/* ==================== STATS SECTION ==================== */
+.stats {
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+	padding: 3rem 5% 3rem;
+	gap: 2rem;
+	position: relative;
+	z-index: 1;
+}
+
+.stats-dark {
+	background-color: #0a0a0a;
+	box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.5);
+}
+.stats-purple {
+	background: linear-gradient(135deg, #352e23 0%, #9b8663 100%);
+	box-shadow: 0 -10px 30px rgba(255, 220, 160, 0.5);
+}
+
+.stat-item {
+	text-align: center;
+	flex: 1;
+}
+.stat-number {
+	display: block;
+	font-size: clamp(3rem, 6vw, 4.5rem);
+	font-weight: 900;
+	color: var(--text-light);
+	margin-bottom: 0.5rem;
+	text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+.stat-label {
+	display: block;
+	font-size: clamp(0.65rem, 1.2vw, 0.85rem);
+	color: var(--text-light);
+	letter-spacing: 2px;
+	font-weight: 400;
+	text-transform: uppercase;
+}
+.stat-number-wrapper {
+	display: flex;
+	justify-content: center;
+	align-items: baseline;
+	line-height: 1;
+}
+.stat-prefix {
+	display: block;
+	font-size: clamp(3rem, 6vw, 4.5rem);
+	font-weight: 900;
+	color: var(--primary-purple);
+	margin-bottom: 0.5rem;
+	text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+.stats-purple .stat-prefix {
+	color: var(--text-light);
+}
+
+/* ==================== FEEDBACKS SECTION ==================== */
+.feedbacks {
+	padding: 5rem 5%;
+	background-color: var(--bg-body-dark);
+}
+.section-title {
+	font-size: clamp(2.5rem, 6vw, 4rem);
+	font-weight: 700;
+	text-align: center;
+	margin-bottom: 3rem;
+	color: var(--text-light);
+}
+.section-title span {
+	display: block;
+	color: var(--primary-purple);
+	font-weight: 300;
+	font-style: italic;
+}
+.carousel-container {
+	position: relative;
+	max-width: 1200px;
+	margin: 0 auto;
+	overflow: hidden;
+}
+.carousel-track {
+	display: flex;
+	transition: transform 0.5s ease-in-out;
+}
+.feedback-card {
+	min-width: calc(33.333% - 2rem);
+	margin: 0 1rem;
+	background-color: #2a2a2a;
+	border-radius: 20px;
+	padding: 2rem;
+	text-align: center;
+	flex-shrink: 0;
+	transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.feedback-card:hover {
+	transform: translateY(-10px);
+	box-shadow: 0 10px 30px rgba(255, 220, 160, 0.3);
+}
+.feedback-card img {
+	width: 80px;
+	height: 80px;
+	border-radius: 50%;
+	object-fit: cover;
+	margin-bottom: 1rem;
+	border: 3px solid var(--primary-purple);
+	transition: transform 0.3s ease;
+}
+.feedback-card:hover img {
+	transform: scale(1.1);
+}
+.feedback-username {
+	font-weight: 600;
+	margin-bottom: 0.5rem;
+	color: var(--text-light);
+}
+.feedback-stars {
+	color: #ffd700;
+	margin-bottom: 1rem;
+	font-size: 0.9rem;
+}
+.feedback-text {
+	font-size: 0.9rem;
+	line-height: 1.6;
+	color: var(--text-gray);
+}
+.carousel-nav {
+	display: flex;
+	justify-content: center;
+	gap: 1rem;
+	margin-top: 2rem;
+}
+.carousel-button {
+	background-color: transparent;
+	border: 2px solid var(--text-light);
+	color: var(--text-light);
+	width: 50px;
+	height: 50px;
+	border-radius: 50%;
+	cursor: pointer;
+	font-size: 1.2rem;
+	transition: all 0.3s ease;
+}
+.carousel-button:hover {
+	background-color: var(--primary-purple);
+	border-color: var(--primary-purple);
+	transform: scale(1.1);
+}
+
+/* ==================== CTA SECTION ==================== */
+.cta {
+	padding: 4rem 5%;
+	background-color: var(--bg-body-dark);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 2rem;
+	position: relative;
+}
+.vertical-text {
+	writing-mode: vertical-rl;
+	text-orientation: mixed;
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+	font-size: 0.9rem;
+	letter-spacing: 2px;
+	color: var(--text-gray);
+}
+.vertical-text.reverse {
+	transform: rotate(180deg);
+}
+.cta-content-box {
+	position: relative;
+	width: 600px;
+	height: 400px;
+}
+.cta-image-wrapper {
+	position: relative;
+	width: 100%;
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.cta-image-wrapper img {
+	width: 80%;
+	height: 80%;
+	object-fit: cover;
+	border-radius: 20px;
+	z-index: 3;
+	position: relative;
+	cursor: pointer;
+	transition: transform 0.3s ease;
+}
+.cta-image-wrapper img:hover {
+	transform: scale(1.05);
+}
+.cta-circle {
+	position: absolute;
+	width: 200px;
+	height: 200px;
+	border-radius: 50%;
+	z-index: 1;
+	animation: float 6s ease-in-out infinite;
+}
+.cta-circle-purple {
+	background-color: var(--primary-purple);
+	top: 10%;
+	left: -5%;
+}
+.cta-circle-blue {
+	background-color: #4a90e2;
+	bottom: 10%;
+	right: -5%;
+	animation-delay: 3s;
+}
+.cta-text-start,
+.cta-text-now {
+	position: absolute;
+	font-size: 5rem;
+	font-weight: 900;
+	z-index: 2;
+	color: #e0e0e0;
+	opacity: 0.3;
+	pointer-events: none;
+}
+.cta-text-start {
+	top: 5%;
+	left: 5%;
+}
+.cta-text-now {
+	bottom: 5%;
+	right: 5%;
+}
+
+/* ==================== ABOUT US SECTION ==================== */
+.about-us {
+	padding: 5rem 5%;
+	background: linear-gradient(180deg, #352e23 0%, #9b8663 100%);
+}
+.about-us-intro {
+	max-width: 800px;
+	margin: 0 auto 3rem;
+	text-align: center;
+	font-size: 1.1rem;
+	line-height: 1.8;
+	color: var(--text-gray);
+}
+.about-us-gallery {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 1.5rem;
+	max-width: 1200px;
+	margin: 0 auto;
+}
+.gallery-item {
+	border-radius: 15px;
+	overflow: hidden;
+	aspect-ratio: 1;
+	cursor: pointer;
+	position: relative;
+}
+.gallery-item::after {
+	content: "";
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(179, 102, 255, 0);
+	transition: background 0.3s ease;
+}
+.gallery-item:hover::after {
+	background: rgba(255, 220, 160, 0.3);
+}
+.gallery-item img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	transition: transform 0.5s ease;
+}
+.gallery-item:hover img {
+	transform: scale(1.1);
+}
+
+/* ==================== LIGHTBOX ==================== */
+.lightbox {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.9);
+	z-index: 2000;
+	display: none;
+	align-items: center;
+	justify-content: center;
+	animation: fadeIn 0.3s ease;
+}
+.lightbox.active {
+	display: flex;
+}
+.lightbox-content {
+	max-width: 90%;
+	max-height: 90%;
+	position: relative;
+}
+.lightbox-content img {
+	width: 100%;
+	height: 100%;
+	object-fit: contain;
+}
+.lightbox-close {
+	position: absolute;
+	top: 20px;
+	right: 20px;
+	font-size: 3rem;
+	color: var(--text-light);
+	cursor: pointer;
+	z-index: 2001;
+	transition: transform 0.3s ease;
+}
+.lightbox-close:hover {
+	transform: rotate(90deg);
+}
+
+/* ==================== SCHEDULE SECTION ==================== */
+.schedule-section {
+	padding: 5rem 5%;
+	background-color: var(--bg-body-dark);
+	text-align: center;
+}
+
+.schedule-button {
+	background-color: var(--bg-white);
+	color: var(--text-dark);
+	border: none;
+	padding: 1.2rem 3rem;
+	border-radius: 50px;
+	font-size: 1.1rem;
+	font-weight: 700;
+	cursor: pointer;
+	margin-bottom: 3rem;
+	transition: all 0.3s ease;
+	box-shadow: 0 5px 15px rgba(255, 220, 160, 0.3);
+}
+
+.schedule-button:hover {
+	background-color: var(--primary-purple);
+	color: var(--text-light);
+	transform: translateY(-5px);
+	box-shadow: 0 10px 25px rgba(255, 220, 160, 0.5);
+}
+
+/* ==================== FOOTER ==================== */
+.footer {
+	background: linear-gradient(180deg, #352e23 0%, #9b8663 100%);
+	padding: 4rem 5% 2rem;
+}
+.footer-grid {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 3rem;
+	max-width: 1200px;
+	margin: 0 auto 3rem;
+}
+.footer-column h3 {
+	margin-bottom: 1.5rem;
+	font-size: 1.2rem;
+	font-weight: 600;
+}
+.footer-column ul {
+	list-style: none;
+}
+.footer-column li {
+	margin-bottom: 0.8rem;
+}
+.footer-column a {
+	color: var(--text-gray);
+	transition: all 0.3s ease;
+}
+.footer-column a:hover {
+	color: var(--primary-purple);
+	padding-left: 5px;
+}
+.footer-map {
+	grid-column: 3;
+}
+.map-placeholder {
+	position: relative;
+	width: 100%;
+	height: 200px;
+	background-color: #2a2a2a;
+	border-radius: 15px;
+	overflow: hidden;
+	transition: transform 0.3s ease;
+}
+.map-link-overlay {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 10;
+	cursor: pointer;
+}
+.map-placeholder iframe {
+	position: relative;
+	z-index: 1;
+}
+.map-placeholder:hover {
+	transform: scale(1.05);
+}
+.footer-social-icons {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 1.5rem;
+	margin-bottom: 2rem;
+}
+.footer-social-icons span {
+	font-weight: 600;
+}
+.footer-social-icons a {
+	color: var(--text-light);
+	font-size: 1.3rem;
+	transition: all 0.3s ease;
+}
+.footer-social-icons a:hover {
+	color: var(--primary-purple);
+	transform: translateY(-5px);
+}
+.footer-bottom {
+	text-align: center;
+	padding-top: 2rem;
+	border-top: 1px solid rgba(255, 255, 255, 0.1);
+	color: var(--text-gray);
+	font-size: 0.9rem;
+}
+
+/* ==================== SCROLL TO TOP BUTTON ==================== */
+.scroll-to-top {
+	position: fixed;
+	bottom: 30px;
+	right: 30px;
+	width: 50px;
+	height: 50px;
+	background-color: var(--primary-purple);
+	color: var(--text-light);
+	border: none;
+	border-radius: 50%;
+	cursor: pointer;
+	font-size: 1.5rem;
+	display: none;
+	align-items: center;
+	justify-content: center;
+	z-index: 999;
+	transition: all 0.3s ease;
+	box-shadow: 0 5px 15px rgba(255, 220, 160, 0.4);
+}
+.scroll-to-top.visible {
+	display: flex;
+}
+.scroll-to-top:hover {
+	background-color: #ffdca0;
+	transform: translateY(-5px);
+	box-shadow: 0 10px 25px rgba(255, 220, 160, 0.6);
+}
+
+/* ==================== RESPONSIVIDADE MONITOR PEQUENO ==================== */
+@media screen and (min-width: 1024px) and (max-width: 1920px) {
+	.logo img {
+		height: 75px;
+		margin-top: 6px;
+		width: auto;
+		transition: transform 0.3s ease;
+	}
+
+	.hero {
+		min-height: 100vh;
+		display: flex;
+		align-items: center; /* Centraliza o container verticalmente */
+		justify-content: center;
+		background-color: var(--bg-white);
+		position: relative;
+		overflow: hidden;
+		padding-top: 8rem; /* Espaço para o header fixo */
+		padding-bottom: 0; /* Remove padding inferior */
+	}
+
+	/* Container principal dentro do hero - ocupará a altura disponível */
+	.hero-container {
+		position: relative;
+		width: 100%;
+		max-width: 1200px; /* Limita a largura máxima */
+		/* A altura será definida pelo conteúdo + posicionamento absoluto */
+		height: calc(
+			100vh - 8rem
+		); /* Altura disponível descontando o padding do topo do hero */
+	}
+
+	.intro-text-wrapper {
+		position: absolute;
+		top: 0%; /* Subiu (experimente 15%, 18%...) */
+		left: 8%;
+		max-width: 250px;
+		z-index: 10;
+		opacity: 0;
+		animation: fadeInUp 1s ease forwards 0.3s;
+	}
+
+	/* (Regras .intro-text e .intro-text a continuam iguais) */
+	.intro-text {
+		line-height: 1.7;
+		font-size: 1rem;
+		color: var(--text-dark);
+	}
+	.intro-text a {
+		color: var(--text-dark);
+		font-weight: 700;
+		display: inline-block;
+		margin-top: 0.5rem;
+		position: relative;
+		transition: color 0.3s ease;
+	}
+
+	.intro-text a::after {
+		content: "";
+		position: absolute;
+		bottom: -2px;
+		left: 0;
+		width: 0;
+		height: 2px;
+		background-color: var(--primary-purple);
+		transition: width 0.3s ease;
+	}
+	.intro-text a:hover {
+		color: var(--primary-purple);
+	}
+	.intro-text a:hover::after {
+		width: 100%;
+	}
+
+	/* IMAGEM DO KAYRE - Alinhada na base */
+	.hero-image-wrapper {
+		position: absolute;
+		bottom: -12px; /* Faz a base da div tocar a borda inferior do hero-container */
+		left: 50%; /* Centro horizontal */
+		transform: translateX(-50%); /* Centraliza */
+		width: clamp(400px, 35vw, 550px);
+		z-index: 3;
+		opacity: 0;
+		animation: fadeInUpImage 1s ease forwards 0.5s;
+		line-height: 0; /* Remove espaço extra */
+	}
+
+	.hero-image-wrapper img {
+		display: block;
+		width: 100%;
+		height: auto;
+		filter: drop-shadow(0px 15px 30px rgba(0, 0, 0, 0.2));
+	}
+
+	/* CÍRCULO ROXO - Posicionado relativo à imagem */
+	.hero-circle {
+		position: absolute;
+		width: clamp(450px, 40vw, 650px);
+		height: clamp(450px, 40vw, 650px);
+		background-color: var(--primary-purple);
+		border-radius: 50%;
+		z-index: 2; /* Atrás da imagem */
+		/* Alinha a base do círculo um pouco ACIMA da base da imagem */
+		bottom: 3rem;
+		/* Posiciona a borda esquerda do círculo um pouco ANTES do centro da página */
+		left: 51%;
+		/* Centraliza horizontalmente e sobe */
+		transform: translate(-50%, 0) scale(0);
+		opacity: 0;
+		animation: scaleInRevised 1s ease forwards 0.2s;
+	}
+
+	/* TÍTULO - Posição ajustada */
+	.hero-title {
+		position: absolute;
+		right: 5%;
+		top: 15%; /* Subiu (experimente 40%, 45%...) */
+		transform: translateY(-50%);
+		font-size: clamp(5rem, 12vw, 6rem);
+		font-weight: 900;
+		line-height: 1;
+		z-index: 10;
+		color: var(--text-dark);
+		opacity: 0;
+		animation: fadeInRight 1s ease forwards 0.4s;
+	}
+
+	.hero-title span {
+		margin-left: 6vh;
+	}
+
+	.cta {
+		padding: 8rem 5%;
+		background-color: var(--bg-body-dark);
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		gap: 2rem;
+		position: relative;
+		min-height: 80vh;
+	}
+
+	.vertical-text {
+		writing-mode: vertical-rl;
+		text-orientation: mixed;
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+		font-size: 0.9rem;
+		letter-spacing: 2px;
+		color: var(--text-gray);
+	}
+
+	.vertical-text.reverse {
+		transform: rotate(180deg);
+	}
+
+	.cta-content-box {
+		position: relative;
+		width: 100%; /* Usar porcentagem para ocupar mais espaço */
+		max-width: 800px; /* Definir um limite máximo */
+		/* Ajuste a altura - você pode usar 'height' ou aspect-ratio */
+		/* Opção 1: Altura fixa maior */
+		height: 450px;
+		/* Opção 2: Usar aspect-ratio para manter proporção */
+		aspect-ratio: 16 / 7; /* Exemplo de proporção mais larga, ajuste conforme necessário */
+		background-color: #e0e0e0; /* Fundo cinza */
+		border-radius: 20px; /* Bordas mais arredondadas como no modelo */
+		padding: 1rem; /* Padding interno */
+		display: flex; /* Para centralizar o wrapper da imagem */
+		align-items: center;
+		justify-content: center;
+	}
+
+	.cta-image-wrapper {
+		position: relative;
+		width: 100%;
+		height: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.cta-image-wrapper img {
+		width: 90%; /* Aumentado para preencher mais a caixa */
+		height: 90%; /* Aumentado para preencher mais a caixa */
+		object-fit: cover;
+		border-radius: 15px; /* Bordas arredondadas na imagem */
+		z-index: 3;
+		position: relative;
+		cursor: pointer;
+		transition: transform 0.3s ease;
+	}
+
+	.cta-image-wrapper img:hover {
+		transform: scale(1.05);
+	}
+}
+
+/* ==================== RESPONSIVIDADE MONITOR GRANDE ==================== */
+@media screen and (min-width: 1920px) and (max-width: 3600px) {
+	.hero {
+		min-height: 100vh;
+		display: flex;
+		align-items: center; /* Centraliza o container verticalmente */
+		justify-content: center;
+		background-color: var(--bg-white);
+		position: relative;
+		overflow: hidden;
+		padding-top: 1rem; /* Espaço para o header fixo */
+		padding-bottom: 0; /* Remove padding inferior */
+	}
+
+	/* Container principal dentro do hero - ocupará a altura disponível */
+	.hero-container {
+		position: relative;
+		width: 100%;
+		max-width: 1200px; /* Limita a largura máxima */
+		/* A altura será definida pelo conteúdo + posicionamento absoluto */
+		height: calc(
+			100vh - 5rem
+		); /* Altura disponível descontando o padding do topo do hero */
+	}
+
+	.intro-text-wrapper {
+		position: absolute;
+		top: 25%; /* Subiu (experimente 15%, 18%...) */
+		left: -4%;
+		max-width: 380px;
+		z-index: 10;
+		opacity: 0;
+		animation: fadeInUp 1s ease forwards 0.3s;
+	}
+
+	/* (Regras .intro-text e .intro-text a continuam iguais) */
+	.intro-text {
+		line-height: 1.6;
+		font-size: 1.3rem;
+		color: var(--text-dark);
+	}
+	.intro-text a {
+		color: var(--text-dark);
+		font-weight: 700;
+		display: inline-block;
+		margin-top: 0.5rem;
+		position: relative;
+		transition: color 0.3s ease;
+	}
+
+	.intro-text a::after {
+		content: "";
+		position: absolute;
+		bottom: -2px;
+		left: 0;
+		width: 0;
+		height: 2px;
+		background-color: var(--primary-purple);
+		transition: width 0.3s ease;
+	}
+	.intro-text a:hover {
+		color: var(--primary-purple);
+	}
+	.intro-text a:hover::after {
+		width: 100%;
+	}
+
+	/* IMAGEM DO KAYRE - Alinhada na base */
+	.hero-image-wrapper {
+		position: absolute;
+		bottom: -2.6rem; /* Faz a base da div tocar a borda inferior do hero-container */
+		left: 50%; /* Centro horizontal */
+		transform: translateX(-50%); /* Centraliza */
+		width: clamp(400px, 35vw, 550px);
+		z-index: 3;
+		opacity: 0;
+		animation: fadeInUpImage 1s ease forwards 0.5s;
+		line-height: 0; /* Remove espaço extra */
+	}
+
+	.hero-image-wrapper img {
+		display: block;
+		width: 100%;
+		height: auto;
+		filter: drop-shadow(0px 15px 30px rgba(0, 0, 0, 0.2));
+	}
+
+	/* CÍRCULO ROXO - Posicionado relativo à imagem */
+	.hero-circle {
+		position: absolute;
+		width: clamp(650px, 40vw, 650px);
+		height: clamp(650px, 40vw, 650px);
+		background-color: var(--primary-purple);
+		border-radius: 50%;
+		z-index: 2; /* Atrás da imagem */
+		/* Alinha a base do círculo um pouco ACIMA da base da imagem */
+		bottom: 8rem;
+		/* Posiciona a borda esquerda do círculo um pouco ANTES do centro da página */
+		left: 51%;
+		/* Centraliza horizontalmente e sobe */
+		transform: translate(-50%, 0) scale(0);
+		opacity: 0;
+		animation: scaleInRevised 1s ease forwards 0.2s;
+	}
+
+	/* TÍTULO - Posição ajustada */
+	.hero-title {
+		position: absolute;
+		right: -7%;
+		top: 40%; /* Subiu (experimente 40%, 45%...) */
+		transform: translateY(-50%);
+		font-size: clamp(5rem, 12vw, 9rem);
+		font-weight: 900;
+		line-height: 1.2;
+		z-index: 10;
+		color: var(--text-dark);
+		opacity: 0;
+		animation: fadeInRight 1s ease forwards 0.4s;
+	}
+
+	.hero-title span {
+		margin-left: 6vh;
+	}
+
+	.social-icons {
+		position: absolute;
+		bottom: 5vh;
+		left: 5%;
+		display: flex;
+		gap: 1.5rem;
+		z-index: 10;
+		opacity: 0;
+		animation: fadeInUp 1s ease forwards 0.6s;
+	}
+
+	.social-icons a {
+		background-color: var(--text-dark);
+		color: var(--bg-white);
+		width: 65px;
+		height: 65px;
+		border-radius: 50%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 1.1rem;
+		transition: all 0.3s ease;
+	}
+
+	.social-icons a:hover {
+		background-color: var(--primary-purple);
+		transform: scale(1.1) rotate(360deg);
+	}
+
+	.cta {
+		padding: 8rem 5%;
+		background-color: var(--bg-body-dark);
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		gap: 2rem;
+		position: relative;
+		min-height: 80vh;
+	}
+
+	.vertical-text {
+		writing-mode: vertical-rl;
+		text-orientation: mixed;
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+		font-size: 0.9rem;
+		letter-spacing: 2px;
+		color: var(--text-gray);
+	}
+
+	.vertical-text.reverse {
+		transform: rotate(180deg);
+	}
+
+	.cta-content-box {
+		position: relative;
+		width: 100%; /* Usar porcentagem para ocupar mais espaço */
+		max-width: 1100px; /* Definir um limite máximo */
+		/* Ajuste a altura - você pode usar 'height' ou aspect-ratio */
+		/* Opção 1: Altura fixa maior */
+		height: 600px;
+		/* Opção 2: Usar aspect-ratio para manter proporção */
+		aspect-ratio: 16 / 7; /* Exemplo de proporção mais larga, ajuste conforme necessário */
+		background-color: #e0e0e0; /* Fundo cinza */
+		border-radius: 20px; /* Bordas mais arredondadas como no modelo */
+		padding: 1.5rem; /* Padding interno */
+		display: flex; /* Para centralizar o wrapper da imagem */
+		align-items: center;
+		justify-content: center;
+	}
+
+	.cta-image-wrapper {
+		position: relative;
+		width: 100%;
+		height: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.cta-image-wrapper img {
+		width: 90%; /* Aumentado para preencher mais a caixa */
+		height: 90%; /* Aumentado para preencher mais a caixa */
+		object-fit: cover;
+		border-radius: 15px; /* Bordas arredondadas na imagem */
+		z-index: 3;
+		position: relative;
+		cursor: pointer;
+		transition: transform 0.3s ease;
+	}
+
+	.cta-image-wrapper img:hover {
+		transform: scale(1.05);
+	}
+
+	.cta-circle {
+		position: absolute;
+		width: 250px; /* Aumentar tamanho */
+		height: 250px; /* Aumentar tamanho */
+		border-radius: 50%;
+		z-index: 1;
+		animation: float 6s ease-in-out infinite;
+	}
+
+	.cta-circle-purple {
+		background-color: var(--primary-purple);
+		top: 10%;
+		left: -5%;
+	}
+
+	.cta-circle-blue {
+		background-color: #4a90e2;
+		bottom: 10%;
+		right: -5%;
+		animation-delay: 3s;
+	}
+
+	.cta-text-start,
+	.cta-text-now {
+		position: absolute;
+		font-size: 6rem;
+		font-weight: 900;
+		z-index: 2;
+		color: #e0e0e0;
+		opacity: 0.3;
+		pointer-events: none;
+	}
+
+	.cta-text-start {
+		top: 5%;
+		left: 5%;
+	}
+
+	.cta-text-now {
+		bottom: 5%;
+		right: 5%;
+	}
+}
+
+@media screen and (max-width: 1023px) {
+	.header {
+		padding: 1rem 5%;
+	}
+	.logo img {
+		height: 50px;
+	}
+	.hamburger-menu {
+		font-size: 1.8rem;
+	}
+
+	.hero-title {
+		font-size: clamp(3rem, 10vw, 4rem);
+	}
+
+	.social-icons {
+		bottom: 3vh;
+		left: 3%;
+		gap: 1rem;
+	}
+
+	.social-icons a {
+		width: 50px;
+		height: 50px;
+		font-size: 1rem;
+	}
+}
+
+@media screen and (max-width: 800px) {
+	.header {
+		padding: 0.8rem 5%;
+	}
+	.logo img {
+		height: 40px;
+	}
+	.hamburger-menu {
+		font-size: 1.5rem;
+	}
+
+	.hero-image-wrapper {
+		width: clamp(300px, 50vw, 400px);
+	}
+
+	.hero-circle {
+		width: clamp(300px, 60vw, 400px);
+		height: clamp(300px, 60vw, 400px);
+		bottom: 5rem;
+	}
+
+	.intro-text {
+		line-height: 1;
+		font-size: 1rem;
+		color: var(--text-dark);
+	}
+
+	.intro-text a {
+		color: var(--text-dark);
+		font-weight: 700;
+		display: inline-block;
+		margin-top: 0.5rem;
+		position: relative;
+		transition: color 0.3s ease;
+	}
+
+	.intro-text a::after {
+		content: "";
+		position: absolute;
+		bottom: -2px;
+		left: 0;
+		width: 0;
+		height: 2px;
+		background-color: var(--primary-purple);
+		transition: width 0.3s ease;
+	}
+}
+
+@media screen and (max-width: 600px) {
+	.header {
+		padding: 0.8rem 5%;
+	}
+	.logo img {
+		height: 40px;
+	}
+	.hamburger-menu {
+		font-size: 1.5rem;
+	}
+
+	.hero-title {
+		width: 100%; /* Ocupa largura para centralizar texto */
+		opacity: 1;
+		z-index: 5;
+		animation: fadeInRight 1s ease forwards 0.4s;
+		margin-top: -3.2rem; /* <<<--- ADICIONADO: Empurra o título para baixo */
+		br {
+			display: none;
+		}
+	}
+
+	.hero-title span {
+		margin-left: 1vh;
+	}
+
+	.intro-text {
+		animation: fadeInRight 1s ease forwards 0.4s;
+	}
+
+	.hero-image-wrapper {
+		width: clamp(400px, 60vw, 300px);
+		bottom: -1rem;
+	}
+
+	.hero-circle {
+		width: clamp(400px, 70vw, 300px);
+		height: clamp(400px, 70vw, 300px);
+		bottom: 7.2rem;
+	}
+
+	.social-icons {
+		bottom: 2vh;
+		left: 20%;
+		gap: 0.8rem;
+	}
+
+	.stats {
+		flex-direction: column;
+		gap: 2rem;
+	}
+
+	.about-us-gallery {
+		grid-template-columns: 1fr;
+	}
+
+	.footer-grid {
+		grid-template-columns: 1fr;
+		text-align: center;
+	}
+	.footer-map {
+		grid-column: 1;
+	}
+}
+
+/* ============================================= */
+/* == INÍCIO DOS ESTILOS DO CALENDÁRIO E MODAIS == */
+/* ============================================= */
+
+/* Estilos gerais para os overlays dos modais */
+.modal-overlay {
+	display: none;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.85); /* Mais escuro */
+	justify-content: center;
+	align-items: center;
+	z-index: 1000; /* Garante que fique acima de tudo */
+	padding: 15px; /* Espaço para não colar nas bordas */
+	box-sizing: border-box;
+}
+
+/* Conteúdo base do modal (herdado pelos outros) */
+.modal-content {
+	background-color: var(--content-bg, #1a1a1a);
+	padding: 20px;
+	border-radius: 10px;
+	box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5), 0 0 25px rgba(255, 220, 160, 0.3);
+	width: 100%;
+	max-width: 400px; /* Largura padrão dos modais menores */
+	position: relative;
+	animation: slide-down 0.4s ease-out;
+	text-align: center;
+	border: 1px solid var(--accent-purple, #ffdca0);
+	max-height: 90vh; /* Altura máxima */
+	overflow-y: auto; /* Scroll interno se necessário */
+	box-sizing: border-box;
+}
+
+@keyframes slide-down {
+	from {
+		transform: translateY(-30px);
+		opacity: 0;
+	}
+	to {
+		transform: translateY(0);
+		opacity: 1;
+	}
+}
+
+/* Botão de fechar padrão (para form/alerta) */
+.modal-content > .close-button {
+	position: absolute;
+	top: 8px;
+	right: 15px;
+	font-size: 1.8em;
+	color: var(--text-medium, #aaa);
+	cursor: pointer;
+	transition: color 0.3s;
+	line-height: 1;
+	z-index: 1010;
+}
+.modal-content > .close-button:hover {
+	color: #fff;
+}
+
+/* --- Estilos Específicos do Modal do CALENDÁRIO --- */
+.calendar-modal-content {
+	max-width: 800px;
+	padding: 0;
+	overflow: visible;
+	background: none;
+	border: none;
+	box-shadow: none;
+
+	overflow-y: auto; /* Adiciona barra de rolagem vertical */
+	max-height: 80vh; /* Limita a altura para evitar que ultrapasse a tela */
+	color: white; /* Define a cor do texto como branco */
+}
+
+/* Garantindo que a barra de rolagem esteja sempre visível */
+.calendar-modal-content {
+	overflow-y: scroll !important; /* Garante a barra de rolagem vertical */
+	overflow-x: hidden !important; /* Remove a barra horizontal */
+	-ms-overflow-style: scrollbar; /* Força barra visível no IE/Edge */
+}
+
+/* Container interno do calendário */
+.calendar-container-integrated {
+	background-color: var(--content-bg, #1a1a1a);
+	border-radius: 10px;
+	width: 100%;
+	position: relative; /* Pai para o posicionamento do X */
+	border: 1px solid 4746495e;
+	box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5), 0 0 25px rgba(255, 220, 160, 0.3);
+	max-height: 80vh;
+	overflow-y: scroll !important; /* Força a barra de rolagem vertical sempre visível */
+	overflow-x: hidden !important; /* Remove a barra horizontal */
+}
+
+/* Botão Fechar (X) ESPECÍFICO do Modal do Calendário */
+#close-calendar-modal.close-button {
+	position: absolute;
+	top: -3px;
+	right: 15px;
+	font-size: 1.6em;
+	color: var(--text-medium, #aaa);
+	cursor: pointer;
+	transition: color 0.3s;
+	line-height: 1;
+	z-index: 1050; /* Acima do header roxo */
+}
+#close-calendar-modal.close-button:hover {
+	color: #fff;
+}
+
+/* Cabeçalho DENTRO DO MODAL do calendário */
+.calendar-container-integrated .calendar-header {
+	display: grid;
+	grid-template-columns: 100px 1fr 100px;
+	align-items: center;
+	padding: 15px;
+	gap: 10px;
+	border-bottom: 1px solid var(--border-color, #333);
+	background-color: #222;
+	position: relative;
+	box-sizing: border-box;
+}
+/* h2 DENTRO DO MODAL do calendário */
+.calendar-container-integrated .calendar-header h2 {
+	margin: 0;
+	font-size: 1.2em;
+	text-align: center;
+	font-weight: 700;
+	color: #fff;
+	text-transform: uppercase;
+	letter-spacing: 1px;
+	text-shadow: none;
+}
+/* botões DENTRO DO MODAL do calendário */
+.calendar-container-integrated .nav-button {
+	background-color: var(--accent-purple, #ffdca0);
+	color: white;
+	border: 1px solid transparent;
+	padding: 8px 10px;
+	border-radius: 6px;
+	cursor: pointer;
+	font-size: 0.8em;
+	font-weight: 500;
+	transition: all 0.3s ease;
+	width: 100px;
+	text-align: center;
+	box-sizing: border-box;
+}
+.calendar-container-integrated .nav-button:hover:not(:disabled) {
+	background-color: var(--accent-purple-hover, #ffdca0);
+	transform: translateY(-1px);
+	box-shadow: 0 3px 10px rgba(255, 220, 160, 0.3);
+}
+.calendar-container-integrated .nav-button:disabled {
+	background-color: transparent;
+	color: var(--text-dark-calendar, #555); /* Usando variável renomeada */
+	cursor: not-allowed;
+	border: 1px solid #444;
+}
+
+.calendar-grid-wrapper {
+	overflow-x: auto;
+	background-color: var(--content-bg, #1a1a1a);
+}
+
+.calendar-grid {
+	display: grid;
+	grid-template-columns: 65px repeat(3, minmax(85px, 1fr));
+	min-width: 380px;
+}
+
+.grid-header,
+.time-label,
+.time-slot {
+	padding: 10px 5px;
+	text-align: center;
+	border-bottom: 1px solid var(--border-color, #333);
+	border-left: 1px solid var(--border-color, #333);
+	box-sizing: border-box;
+}
+
+.grid-header {
+	background-color: #222;
+	font-weight: 700;
+	position: sticky;
+	top: 0;
+	z-index: 10;
+	color: var(--accent-purple, #ffdca0);
+	border-top: none;
+	font-size: 0.9em;
+}
+
+.time-label {
+	font-size: 0.75em;
+	color: var(--text-medium, #aaa);
+	border-left: none;
+	position: sticky;
+	left: 0;
+	background-color: var(--content-bg, #1a1a1a);
+	z-index: 5;
+}
+
+.time-slot {
+	background-color: transparent;
+	cursor: pointer;
+	transition: all 0.2s ease-in-out;
+	min-height: 38px;
+	font-weight: 500;
+	font-size: 0.85em;
+	color: #c9bdcffa;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-top: none;
+}
+.time-slot:nth-child(4n + 2) {
+	border-left: none;
+}
+
+.time-slot:hover:not(.unavailable):not(.past-day) {
+	background-color: var(--accent-purple, #ffdca0);
+	color: #fff;
+	transform: scale(1.02);
+	border-color: var(--accent-purple-hover, #ffdca0);
+}
+
+.time-slot.unavailable {
+	background-color: transparent;
+	cursor: not-allowed;
+	color: var(--text-dark-calendar, #555) !important;
+	font-size: 0.8em;
+	text-decoration: line-through;
+}
+
+.time-slot.past-day {
+	background-color: rgba(30, 30, 30, 0.5);
+	cursor: not-allowed;
+	color: #444 !important;
+	font-size: 0.8em;
+	text-decoration: none;
+}
+
+.loading-placeholder {
+	grid-column: 1 / -1;
+	text-align: center;
+	padding: 40px;
+	color: var(--text-medium, #aaa);
+	font-size: 1em;
+}
+
+/* --- Estilos Específicos do Modal de FORMULÁRIO --- */
+/* Herda .modal-content, mas pode ter overrides */
+.booking-form-content h2 {
+	margin-top: 0;
+	font-size: 1.5em;
+	color: var(--accent-purple, #ffdca0);
+	font-weight: 700;
+}
+.booking-form-content p {
+	color: var(--text-medium, #aaa);
+	margin-bottom: 15px;
+	font-size: 0.9em;
+}
+#booking-form {
+	text-align: left;
+}
+#booking-form label {
+	display: block;
+	margin-top: 10px;
+	font-weight: 500;
+	color: #ccc;
+	font-size: 0.85em;
+}
+#booking-form input,
+#booking-form textarea {
+	width: 100%;
+	padding: 10px;
+	margin-top: 5px;
+	border: 1px solid #444;
+	border-radius: 5px;
+	box-sizing: border-box;
+	background-color: #2c2c2c;
+	color: var(--text-light, #f0f0f0);
+	transition: all 0.3s;
+	font-size: 0.9em;
+}
+#booking-form input:focus,
+#booking-form textarea:focus {
+	outline: none;
+	border-color: var(--accent-purple, #ffdca0);
+	box-shadow: 0 0 8px rgba(255, 220, 160, 0.4);
+}
+#booking-form textarea {
+	resize: vertical;
+	min-height: 70px;
+}
+#booking-form button {
+	/* Botão Confirmar Agendamento */
+	width: 100%;
+	padding: 12px;
+	margin-top: 15px;
+	background-color: var(--accent-purple, #ffdca0);
+	color: white;
+	border: none;
+	border-radius: 6px;
+	font-size: 1em;
+	font-weight: 700;
+	cursor: pointer;
+	transition: all 0.3s ease;
+}
+#booking-form button:hover {
+	background-color: var(--accent-purple-hover, #ffdca0);
+	transform: translateY(-1px);
+	box-shadow: 0 4px 12px rgba(255, 220, 160, 0.3);
+}
+
+.file-input-wrapper {
+	display: flex;
+	align-items: center;
+	margin-top: 5px;
+	gap: 8px;
+	border: 1px solid #444;
+	border-radius: 5px;
+	background-color: #2c2c2c;
+	padding: 4px;
+	box-sizing: border-box;
+	width: 100%;
+	position: relative;
+	overflow: hidden;
+}
+
+.file-input-wrapper input[type="file"] {
+	opacity: 0;
+	position: absolute;
+	z-index: -1;
+	width: 0.1px;
+	height: 0.1px;
+	overflow: hidden;
+}
+
+.file-input-label {
+	/* Botão Escolher Arquivo */
+	padding: 6px 12px;
+	background-color: var(--accent-purple, #ffdca0);
+	color: white;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+	transition: background-color 0.3s;
+	font-weight: 500;
+	flex-shrink: 0;
+	font-size: 0.85em;
+	/* position: relative; */ /* Removido */
+	/* top: -2px; */ /* Removido */
+}
+.file-input-label:hover {
+	background-color: var(--accent-purple-hover, #ffdca0);
+}
+
+.file-name {
+	/* Texto Nenhum arquivo selecionado */
+	font-size: 0.8em;
+	color: var(--text-medium, #aaa);
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	flex-grow: 1;
+	padding-left: 5px;
+}
+
+/* --- Estilos Específicos do Modal de ALERTA --- */
+/* Herda .modal-content */
+.alert-content p {
+	margin-bottom: 20px;
+}
+.modal-button {
+	/* Botão OK do Alerta */
+	width: 100%;
+	padding: 12px;
+	margin-top: 15px;
+	background-color: var(--accent-purple, #ffdca0);
+	color: white;
+	border: none;
+	border-radius: 6px;
+	font-size: 1em;
+	font-weight: 700;
+	cursor: pointer;
+	transition: all 0.3s ease;
+}
+.modal-button:hover {
+	background-color: var(--accent-purple-hover, #ffdca0);
+	transform: translateY(-1px);
+	box-shadow: 0 4px 12px rgba(255, 220, 160, 0.3);
+}
+
+/* --- Media Queries Finais --- */
+@media (max-width: 600px) {
+	.calendar-modal-content {
+		max-width: 95%;
+	}
+
+	/* Ajusta header do calendário no modal para mobile */
+	.calendar-container-integrated .calendar-header {
+		grid-template-columns: 1fr 1fr;
+		grid-template-rows: auto auto;
+		justify-items: center;
+		padding: 10px;
+	}
+	.calendar-container-integrated .calendar-header h2 {
+		grid-column: 1 / 3;
+		grid-row: 1;
+		font-size: 1.1em;
+	}
+	.calendar-container-integrated .nav-button {
+		grid-row: 2;
+		width: 95%;
+	}
+
+	/* Ajusta grid do calendário no modal para mobile */
+	.calendar-grid {
+		grid-template-columns: 50px repeat(3, minmax(65px, 1fr));
+		min-width: auto;
+	}
+	.grid-header,
+	.time-label,
+	.time-slot {
+		padding: 8px 4px;
+		font-size: 0.8em;
+	}
+
+	/* Ajusta modal genérico em telas pequenas */
+	.modal-content {
+		width: 95%;
+		padding: 15px;
+		max-height: 85vh;
+	}
+
+	/* Ajusta botão fechar em mobile */
+	.close-button,
+	#close-calendar-modal.close-button {
+		top: 5px;
+		right: 10px;
+		font-size: 1.6em;
+	}
+}
+
+/* Ajustando a barra de rolagem para o calendário */
+.calendar-modal-content {
+	scrollbar-width: thin; /* Para navegadores compatíveis */
+	scrollbar-color: #4746495e rgba(0, 0, 0, 0.1); /* Cor do polegar e trilha */
+}
+
+.calendar-modal-content::-webkit-scrollbar {
+	width: 8px; /* Largura da barra de rolagem */
+}
+
+.calendar-modal-content::-webkit-scrollbar-track {
+	background: rgba(0, 0, 0, 0.1); /* Fundo da barra */
+}
+
+.calendar-modal-content::-webkit-scrollbar-thumb {
+	background: rgba(0, 0, 0, 0.5); /* Cor do "polegar" */
+	border-radius: 4px; /* Bordas arredondadas */
+}
+
+.calendar-modal-content::-webkit-scrollbar-thumb:hover {
+	background: rgba(0, 0, 0, 0.7); /* Cor ao passar o mouse */
+}
+
+/* Ajustando a posição vertical da seção do calendário */
+.calendar-container-integrated {
+	padding-top: 20px; /* Adiciona espaço acima da seção */
+}
+
+/* Travando o site atrás enquanto o modal da agenda estiver ativo */
+body.modal-active {
+	overflow: hidden; /* Impede a rolagem do site */
+}
+
+body.modal-open {
+	overflow: hidden; /* Remove a barra de rolagem do body */
+}
